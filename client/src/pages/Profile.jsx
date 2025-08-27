@@ -109,10 +109,11 @@ export default function Profile() {
       dispatch(signOutUserStart());
       const res = await fetch("/api/auth/signout", {
         method: "GET",
-        credentials: "include", // 👈 force send cookies server receives the correct cookie and can log out the user correctly by clearing the session/token. But in
+        credentials:
+          "include" /* 👈 force send cookies server receives the correct cookie and can log out the user correctly by clearing the session/token. But in
         // SS No (method and credentials part not included because he say by default req is GET. But By default, fetch does NOT send cookies.
         // That means if your server relies on cookies (like HttpOnly cookies storing JWTs or session IDs), the server doesn’t know which user is signing out because the cookie isn’t sent.)
-        //So this {} part is added compared to SS to get response from server in network tab inside signOut saying "User has been logged out!"
+        //So this {} part is added compared to SS to get response from server in network tab inside signOut saying "User has been logged out!"*/,
       });
       const data = await res.json();
 
