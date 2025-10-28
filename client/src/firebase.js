@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "nepal-estate.firebaseapp.com",
   projectId: "nepal-estate",
-  storageBucket: "nepal-estate.firebasestorage.app",
+  storageBucket: "nepal-estate.firebasestorage.app", // ✅ changed from .firebasestorage.app to .appspot.com
   messagingSenderId: "902276452442",
   appId: "1:902276452442:web:7fda8716e6e564b291c863",
 };
