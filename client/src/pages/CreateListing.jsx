@@ -31,7 +31,8 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(formData);
+  const [predictedPrice, setPredictedPrice] = useState(null);
+  // console.log(formData);
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -153,6 +154,44 @@ export default function CreateListing() {
       setLoading(false);
     }
   };
+
+  const handlePredictPrice = async () => {
+    try {
+      const response = await fetch(
+        "https://estate-proj-nep.onrender.com/predict",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            city: "Kathmandu",
+            area: 3000,
+            category: "house",
+            purpose: formData.type, // sale or rent
+            bathroom: formData.bathrooms,
+            bedroom: formData.bedrooms,
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch predicted price");
+
+      const data = await response.json();
+
+      // Use predicted_price and currency
+      const price = data.predicted_price
+        ? `${Math.round(data.predicted_price).toLocaleString()} ${
+            data.currency
+          }`
+        : "No price returned";
+
+      setPredictedPrice(price);
+      alert(`🏠 Predicted Price: ${price}`);
+    } catch (error) {
+      console.error("Prediction error:", error);
+      alert("❌ Failed to predict price. Please try again later.");
+    }
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -362,6 +401,19 @@ export default function CreateListing() {
           >
             {loading ? "Creating..." : "Create listing"}
           </button>
+          <button
+            type="button"
+            onClick={handlePredictPrice}
+            className="p-3 bg-green-700 text-white rounded-lg uppercase hover:opacity-95"
+          >
+            Predict Price
+          </button>
+
+          {predictedPrice && (
+            <p className="text-green-700 font-semibold mt-2">
+              Predicted Price: {predictedPrice}
+            </p>
+          )}
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>
       </form>
